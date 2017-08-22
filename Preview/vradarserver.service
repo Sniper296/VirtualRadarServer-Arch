@@ -8,7 +8,7 @@ Type=simple
 ExecStart=/usr/bin/vradarserver -nogui
 Restart=on-failure
 RestartSec=30
-Environment=XDG_DATA_HOME="~"
+Environment=XDG_DATA_HOME="/var/lib/vradarserver"
 
 [Install]
 WantedBy=multi-user.target
