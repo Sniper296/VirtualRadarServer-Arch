@@ -1,0 +1,14 @@
+[Unit]
+Description=A .NET web server that can plot the positions of aircraft on a map
+After=network.target
+
+[Service]
+User=vradarserver
+Type=simple
+ExecStart=/usr/bin/vradarserver -nogui
+Restart=on-failure
+RestartSec=30
+Environment=XDG_DATA_HOME="~"
+
+[Install]
+WantedBy=multi-user.target
