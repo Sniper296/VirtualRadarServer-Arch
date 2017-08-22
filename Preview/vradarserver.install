@@ -1,0 +1,7 @@
+post_install() {
+	useradd -d /var/lib/vradarserver -k /dev/null -m -r -s /bin/nologin -U vradarserver &>/dev/null
+}
+
+post_remove() {
+	userdel vradarserver &>/dev/null
+}
