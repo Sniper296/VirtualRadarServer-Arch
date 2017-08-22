@@ -1,1 +1,2 @@
+*.install linguist-language=Shell
 *.service linguist-language=desktop
