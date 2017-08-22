@@ -1,0 +1,67 @@
+pkgname=vradarserver
+pkgver=20170217
+pkgrel=1
+pkgdesc='A .NET web server that can plot the positions of aircraft on a map'
+arch=('any')
+url='http://www.virtualradarserver.co.uk/'
+license=('custom')
+depends=('mono')
+optdepends=('dump1090-mutability-git: feed from an RTL-SDR')
+options=('!strip')
+install='vradarserver.install'
+source=('http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.tar.gz'
+        'http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.CustomContentPlugin.tar.gz'
+        'http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.DatabaseEditorPlugin.tar.gz'
+        'http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.DatabaseWriterPlugin.tar.gz'
+        'http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.FeedFilterPlugin.tar.gz'
+        'http://www.virtualradarserver.co.uk/Files/Preview/VirtualRadar.WebAdminPlugin.tar.gz'
+        'vradarserver'
+        'vradarserver.service'
+        'LICENSE')
+noextract=('VirtualRadar.tar.gz'
+           'VirtualRadar.CustomContentPlugin.tar.gz'
+           'VirtualRadar.DatabaseEditorPlugin.tar.gz'
+           'VirtualRadar.DatabaseWriterPlugin.tar.gz'
+           'VirtualRadar.FeedFilterPlugin.tar.gz'
+           'VirtualRadar.WebAdminPlugin.tar.gz')
+sha256sums=('57d81610fde5994d6c2433b12fc9daac877c1fc63d4aa367e91c098b30e00f03'
+            '9161a3af01b3ece160c1005aaf0e57237b74adf234110e1147c4eae78e9d374f'
+            'bc9154d2544a9dac9f39c942c4cdd660c7baeeecde778b87a136f219698a0e39'
+            'ee0b7c36a3b8dee455c93ed257e3bdd970fed1282630efdd6b8f6ee703cdf6da'
+            '14a8bb488f352c52097867a28034b191c2798fe1b76fa461d18caa0efe949863'
+            'b5eb37c017c92e2a930ded2f4fd9d77d0740b6f6b52acddad4a3dea9bf3ad961'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+prepare() {
+	cd "$srcdir"
+
+	mkdir "$pkgname-$pkgver"
+
+	bsdtar -xf VirtualRadar.tar.gz -C "$pkgname-$pkgver"
+	bsdtar -xf VirtualRadar.CustomContentPlugin.tar.gz -C "$pkgname-$pkgver"
+	bsdtar -xf VirtualRadar.DatabaseEditorPlugin.tar.gz -C "$pkgname-$pkgver"
+	bsdtar -xf VirtualRadar.DatabaseWriterPlugin.tar.gz -C "$pkgname-$pkgver"
+	bsdtar -xf VirtualRadar.FeedFilterPlugin.tar.gz -C "$pkgname-$pkgver"
+	bsdtar -xf VirtualRadar.WebAdminPlugin.tar.gz -C "$pkgname-$pkgver"
+}
+
+package() {
+	cd "$srcdir"
+
+	install -Dm755 vradarserver "$pkgdir/usr/bin/$pkgname"
+
+	install -Dm644 vradarserver.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+	cd "$pkgname-$pkgver"
+
+	install -dm755 "$pkgdir/usr/share/$pkgname"
+
+	cp -r --no-preserve=ownership * "$pkgdir/usr/share/$pkgname"
+
+	find "$pkgdir/usr/share/$pkgname" -type d -exec chmod 755 '{}' ';'
+	find "$pkgdir/usr/share/$pkgname" -type f -exec chmod 644 '{}' ';'
+}
