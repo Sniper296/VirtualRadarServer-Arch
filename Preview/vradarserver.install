@@ -1,5 +1,6 @@
 post_install() {
 	useradd -d /var/lib/vradarserver -k /dev/null -m -r -s /bin/nologin -U vradarserver &>/dev/null
+	chmod 755 /var/lib/vradarserver
 }
 
 post_remove() {
